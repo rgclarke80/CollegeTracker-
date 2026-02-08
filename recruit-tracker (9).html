@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Soccer Recruit Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: #0f172a;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .players-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #0f172a;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #0f172a;
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #f97316;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .rating-group {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .rating-group h3 {
+            color: #0f172a;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .rating-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .rating-input label {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .rating-input input {
+            width: 70px;
+            margin-left: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #f97316;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #ea580c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .player-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+        }
+
+        .player-card:hover {
+            border-color: #f97316;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-main {
+            display: flex;
+            gap: 15px;
+            align-items: start;
+            flex: 1;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f97316;
+            flex-shrink: 0;
+        }
+
+        .profile-pic-placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            border: 3px solid #f97316;
+            flex-shrink: 0;
+        }
+
+        .star-btn {
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+
+        .star-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .star-btn.starred {
+            color: #f97316;
+        }
+
+        .star-btn:not(.starred) {
+            color: #cbd5e1;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+            top: 2px;
+        }
+
+        .tab:hover {
+            color: #0f172a;
+        }
+
+        .tab.active {
+            color: #f97316;
+            border-bottom-color: #f97316;
+        }
+
+        .tab-count {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-left: 6px;
+        }
+
+        .tab.active .tab-count {
+            background: #fed7aa;
+            color: #f97316;
+        }
+
+        .video-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f97316;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .video-link-btn:hover {
+            background: #ea580c;
+            transform: translateY(-2px);
+        }
+
+        .performance-summary {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .performance-stat {
+            flex: 1;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .performance-stat-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .performance-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .depth-chart-container {
+            display: none;
+        }
+
+        .depth-chart-container.active {
+            display: block;
+        }
+
+        .formation-selector {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .formation-selector label {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .formation-selector select {
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .soccer-field {
+            background: linear-gradient(180deg, #2d8659 0%, #1e6b45 100%);
+            border-radius: 12px;
+            padding: 30px 20px;
+            position: relative;
+            min-height: 700px;
+            border: 3px solid white;
+        }
+
+        .field-line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .center-line {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+        }
+
+        .center-circle {
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .penalty-box {
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .penalty-box.top {
+            width: 60%;
+            height: 80px;
+            top: 0;
+        }
+
+        .penalty-box.bottom {
+            width: 60%;
+            height: 80px;
+            bottom: 0;
+        }
+
+        .field-positions {
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .position-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 10;
+        }
+
+        .player-slot {
+            background: white;
+            border: 3px solid #f97316;
+            border-radius: 8px;
+            padding: 12px;
+            min-width: 140px;
+            max-width: 180px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .player-slot:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .player-slot.empty {
+            background: rgba(255, 255, 255, 0.9);
+            color: #64748b;
+            border-style: dashed;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slot-position {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+            background: #0f172a;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .player-slot.empty .slot-position {
+            background: #64748b;
+        }
+
+        .player-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .player-item {
+            background: #f97316;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+
+        .player-item:hover {
+            background: #ea580c;
+            transform: scale(1.02);
+        }
+
+        .player-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .player-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            flex: 1;
+            text-align: left;
+        }
+
+        .player-item-rating {
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .remove-player {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            margin-left: 6px;
+            transition: all 0.2s;
+        }
+
+        .remove-player:hover {
+            background: #dc2626;
+        }
+
+        .slot-add-btn {
+            background: rgba(15, 23, 42, 0.1);
+            color: #0f172a;
+            border: 2px dashed #cbd5e1;
+            padding: 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 6px;
+            transition: all 0.2s;
+        }
+
+        .slot-add-btn:hover {
+            background: #f97316;
+            color: white;
+            border-color: #f97316;
+        }
+
+        .player-slot.drag-over {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 20px;
+        }
+
+        .player-option {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-option:hover {
+            border-color: #f97316;
+            background: #fef3c7;
+        }
+
+        .player-option-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .player-option-rating {
+            background: #f97316;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: #e2e8f0;
+            color: #64748b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .modal-close:hover {
+            background: #cbd5e1;
+        }
+
+        .clear-slot-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .clear-slot-btn:hover {
+            background: #dc2626;
+        }
+
+        .player-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+
+        .player-details {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .overall-score {
+            background: #0f172a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 70px;
+        }
+
+        .overall-score-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f97316;
+        }
+
+        .overall-score-label {
+            font-size: 11px;
+            opacity: 0.7;
+            color: white;
+        }
+
+        .player-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 3px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .rating-bars {
+            margin-bottom: 15px;
+        }
+
+        .rating-bar {
+            margin-bottom: 8px;
+        }
+
+        .rating-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #0f172a;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .rating-bar-fill {
+            height: 8px;
+            background: #f1f5f9;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .rating-bar-progress {
+            height: 100%;
+            background: #f97316;
+            transition: width 0.3s;
+        }
+
+        .player-notes {
+            background: #fef3c7;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #f59e0b;
+            font-size: 14px;
+            color: #78350f;
+            margin-bottom: 10px;
+        }
+
+        .delete-btn {
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+        .no-players {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .no-players svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.2;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-section {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>College Soccer Recruit Tracker</h1>
+            <p class="subtitle">Manage and evaluate your soccer recruits</p>
+        </header>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2>Add New Recruit</h2>
+                <form id="recruitForm">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Video Link</label>
+                        <input type="url" id="videoLink" placeholder="https://youtube.com/watch?v=...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="dob">
+                    </div>
+
+                    <div class="form-group">
+                        <label>GPA *</label>
+                        <input type="number" id="gpa" step="0.01" min="0" max="4.0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Position *</label>
+                        <input type="text" id="position" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Recruiting Year *</label>
+                        <select id="recruitingYear" required>
+                            <option value="">Select Year</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Club/Organization</label>
+                        <input type="text" id="club">
+                    </div>
+
+                    <div class="rating-group">
+                        <h3>Performance Ratings (0-10)</h3>
+                        <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Overall score will be calculated automatically as the average</p>
+                        <div class="rating-input">
+                            <label>Technical</label>
+                            <input type="number" id="technical" min="0" max="10" step="0.1" value="5" required>
+                        </div>
+                        <div class="rating-input">
+                            <label>Tactical</label>
+                            <input type="number" id="tactical" min="0" max="10" step="0.1" value="5" required>
+                        </div>
+                        <div class="rating-input">
+                            <label>Physical</label>
+                            <input type="number" id="physical" min="0" max="10" step="0.1" value="5" required>
+                        </div>
+                        <div class="rating-input">
+                            <label>Mental</label>
+                            <input type="number" id="mental" min="0" max="10" step="0.1" value="5" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="notes"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Add Recruit</button>
+                </form>
+            </div>
+
+            <div class="players-section">
+                <h2>Recruits</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" id="tabAll" onclick="switchTab('all')">
+                        All Recruits <span class="tab-count" id="countAll">0</span>
+                    </button>
+                    <button class="tab" id="tabStarred" onclick="switchTab('starred')">
+                        Recruiting List <span class="tab-count" id="countStarred">0</span>
+                    </button>
+                    <button class="tab" id="tabDepthChart" onclick="switchTab('depthChart')">
+                        Depth Chart
+                    </button>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Search by Name</label>
+                        <input type="text" id="filterName" placeholder="Enter name...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Recruiting Year</label>
+                        <select id="filterYear">
+                            <option value="">All Years</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Min Overall Score</label>
+                        <input type="number" id="filterScore" step="0.1" min="0" max="10" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="depth-chart-container" id="depthChartContainer">
+                    <div class="formation-selector">
+                        <label>Formation:</label>
+                        <select id="formationSelect" onchange="changeFormation()">
+                            <option value="1442">4-4-2</option>
+                            <option value="1433">4-3-3</option>
+                            <option value="1352">3-5-2</option>
+                            <option value="14231">4-2-3-1</option>
+                            <option value="1343">4-3-4 (3-4-3)</option>
+                            <option value="14141">4-1-4-1</option>
+                        </select>
+                    </div>
+
+                    <div class="soccer-field">
+                        <div class="field-line center-line"></div>
+                        <div class="center-circle"></div>
+                        <div class="penalty-box top"></div>
+                        <div class="penalty-box bottom"></div>
+                        
+                        <div class="field-positions" id="fieldPositions"></div>
+                    </div>
+                </div>
+
+                <div id="playersList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="playerModal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">Select Player</div>
+            <div id="playerOptions"></div>
+            <button class="modal-close" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        let players = JSON.parse(localStorage.getItem('recruits')) || [];
+        let currentView = 'all';
+        let depthChart = JSON.parse(localStorage.getItem('depthChart')) || {};
+        let currentSlot = null;
+        let draggedPlayer = null;
+        let draggedFromSlot = null;
+
+        const formations = {
+            '1442': [
+                { row: 'forwards', positions: ['ST', 'ST'] },
+                { row: 'midfield', positions: ['LM', 'CM', 'CM', 'RM'] },
+                { row: 'defense', positions: ['LB', 'CB', 'CB', 'RB'] },
+                { row: 'goalkeeper', positions: ['GK'] }
+            ],
+            '1433': [
+                { row: 'forwards', positions: ['LW', 'ST', 'RW'] },
+                { row: 'midfield', positions: ['CM', 'CM', 'CM'] },
+                { row: 'defense', positions: ['LB', 'CB', 'CB', 'RB'] },
+                { row: 'goalkeeper', positions: ['GK'] }
+            ],
+            '1352': [
+                { row: 'forwards', positions: ['ST', 'ST'] },
+                { row: 'midfield', positions: ['LM', 'CM', 'CM', 'CM', 'RM'] },
+                { row: 'defense', positions: ['CB', 'CB', 'CB'] },
+                { row: 'goalkeeper', positions: ['GK'] }
+            ],
+            '14231': [
+                { row: 'forwards', positions: ['ST'] },
+                { row: 'attacking-mid', positions: ['LW', 'CAM', 'RW'] },
+                { row: 'midfield', positions: ['CDM', 'CDM'] },
+                { row: 'defense', positions: ['LB', 'CB', 'CB', 'RB'] },
+                { row: 'goalkeeper', positions: ['GK'] }
+            ],
+            '1343': [
+                { row: 'forwards', positions: ['LW', 'ST', 'RW'] },
+                { row: 'midfield', positions: ['LM', 'CM', 'CM', 'RM'] },
+                { row: 'defense', positions: ['CB', 'CB', 'CB'] },
+                { row: 'goalkeeper', positions: ['GK'] }
+            ],
+            '14141': [
+                { row: 'forwards', positions: ['ST'] },
+                { row: 'attacking-mid', positions: ['LM', 'CAM', 'CAM', 'RM'] },
+                { row: 'midfield', positions: ['CDM'] },
+                { row: 'defense', positions: ['LB', 'CB', 'CB', 'RB'] },
+                { row: 'goalkeeper', positions: ['GK'] }
+            ]
+        };
+
+        function saveToLocalStorage() {
+            localStorage.setItem('recruits', JSON.stringify(players));
+            localStorage.setItem('depthChart', JSON.stringify(depthChart));
+        }
+
+        function calculateAge(dob) {
+            if (!dob) return 'N/A';
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function updateYearFilter() {
+            const years = [...new Set(players.map(p => p.recruitingYear))].sort();
+            const filterSelect = document.getElementById('filterYear');
+            const currentValue = filterSelect.value;
+            
+            filterSelect.innerHTML = '<option value="">All Years</option>';
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                filterSelect.appendChild(option);
+            });
+            
+            filterSelect.value = currentValue;
+        }
+
+        function toggleStar(index) {
+            players[index].starred = !players[index].starred;
+            saveToLocalStorage();
+            renderPlayers();
+        }
+
+        function switchTab(view) {
+            currentView = view;
+            document.getElementById('tabAll').classList.toggle('active', view === 'all');
+            document.getElementById('tabStarred').classList.toggle('active', view === 'starred');
+            document.getElementById('tabDepthChart').classList.toggle('active', view === 'depthChart');
+            
+            if (view === 'depthChart') {
+                document.getElementById('depthChartContainer').classList.add('active');
+                document.getElementById('playersList').style.display = 'none';
+                document.querySelector('.filters').style.display = 'none';
+                renderDepthChart();
+            } else {
+                document.getElementById('depthChartContainer').classList.remove('active');
+                document.getElementById('playersList').style.display = 'block';
+                document.querySelector('.filters').style.display = 'flex';
+                renderPlayers();
+            }
+        }
+
+        function updateCounts() {
+            const allCount = players.length;
+            const starredCount = players.filter(p => p.starred).length;
+            document.getElementById('countAll').textContent = allCount;
+            document.getElementById('countStarred').textContent = starredCount;
+        }
+
+        function renderPlayers() {
+            const container = document.getElementById('playersList');
+            const filterName = document.getElementById('filterName').value.toLowerCase();
+            const filterYear = document.getElementById('filterYear').value;
+            const filterScore = parseFloat(document.getElementById('filterScore').value) || 0;
+
+            let filteredPlayers = players.filter(player => {
+                const matchName = !filterName || player.name.toLowerCase().includes(filterName);
+                const matchYear = !filterYear || player.recruitingYear === filterYear;
+                const matchScore = player.overallScore >= filterScore;
+                const matchView = currentView === 'all' || (currentView === 'starred' && player.starred);
+                return matchName && matchYear && matchScore && matchView;
+            });
+
+            updateCounts();
+
+            if (filteredPlayers.length === 0) {
+                const message = currentView === 'starred' 
+                    ? 'No players in your recruiting list yet. Click the star to add players!'
+                    : 'No recruits found matching your filters';
+                container.innerHTML = `
+                    <div class="no-players">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <p>${message}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredPlayers.map((player, index) => {
+                const playerIndex = players.indexOf(player);
+                const starClass = player.starred ? 'starred' : '';
+                
+                return `
+                <div class="player-card">
+                    <div class="player-header">
+                        <div class="player-main">
+                            <div class="player-info">
+                                <div class="player-name">
+                                    ${player.name}
+                                    <button class="star-btn ${starClass}" onclick="toggleStar(${playerIndex})" title="${player.starred ? 'Remove from recruiting list' : 'Add to recruiting list'}">
+                                        ${player.starred ? '★' : '☆'}
+                                    </button>
+                                </div>
+                                <div class="player-details">
+                                    ${player.position} • ${player.club || 'No Club'} • Class of ${player.recruitingYear}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overall-score">
+                            <div class="overall-score-value">${player.overallScore}</div>
+                            <div class="overall-score-label">OVERALL</div>
+                        </div>
+                    </div>
+
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">GPA</div>
+                            <div class="stat-value">${player.gpa.toFixed(2)}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Email</div>
+                            <div class="stat-value" style="font-size: 13px;">${player.email}</div>
+                        </div>
+                    </div>
+
+                    <div class="performance-summary">
+                        <div class="performance-stat">
+                            <div class="performance-stat-label">Technical</div>
+                            <div class="performance-stat-value">${player.technical}</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div class="performance-stat-label">Tactical</div>
+                            <div class="performance-stat-value">${player.tactical}</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div class="performance-stat-label">Physical</div>
+                            <div class="performance-stat-value">${player.physical}</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div class="performance-stat-label">Mental</div>
+                            <div class="performance-stat-value">${player.mental}</div>
+                        </div>
+                    </div>
+
+                    ${player.videoLink ? `<a href="${player.videoLink}" target="_blank" class="video-link-btn">▶ Watch Video</a>` : ''}
+
+                    ${player.notes ? `<div class="player-notes"><strong>Notes:</strong> ${player.notes}</div>` : ''}
+
+                    <button class="delete-btn" onclick="deletePlayer(${playerIndex})">Delete Recruit</button>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function deletePlayer(index) {
+            if (confirm('Are you sure you want to delete this recruit?')) {
+                players.splice(index, 1);
+                saveToLocalStorage();
+                updatePositionFilter();
+                renderPlayers();
+            }
+        }
+
+        document.getElementById('recruitForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const technical = parseFloat(document.getElementById('technical').value);
+            const tactical = parseFloat(document.getElementById('tactical').value);
+            const physical = parseFloat(document.getElementById('physical').value);
+            const mental = parseFloat(document.getElementById('mental').value);
+            
+            // Calculate overall score as average of the four ratings
+            const overallScore = ((technical + tactical + physical + mental) / 4).toFixed(1);
+
+            const newPlayer = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                videoLink: document.getElementById('videoLink').value,
+                dob: document.getElementById('dob').value,
+                gpa: parseFloat(document.getElementById('gpa').value),
+                position: document.getElementById('position').value,
+                recruitingYear: document.getElementById('recruitingYear').value,
+                club: document.getElementById('club').value,
+                technical: technical,
+                tactical: tactical,
+                physical: physical,
+                mental: mental,
+                overallScore: parseFloat(overallScore),
+                notes: document.getElementById('notes').value,
+                starred: false
+            };
+
+            players.push(newPlayer);
+            saveToLocalStorage();
+            updateYearFilter();
+            renderPlayers();
+            e.target.reset();
+            document.getElementById('technical').value = 5;
+            document.getElementById('tactical').value = 5;
+            document.getElementById('physical').value = 5;
+            document.getElementById('mental').value = 5;
+        });
+
+        document.getElementById('filterName').addEventListener('input', renderPlayers);
+        document.getElementById('filterYear').addEventListener('change', renderPlayers);
+        document.getElementById('filterScore').addEventListener('input', renderPlayers);
+
+        function changeFormation() {
+            renderDepthChart();
+        }
+
+        function renderDepthChart() {
+            const formation = document.getElementById('formationSelect').value;
+            const positions = formations[formation];
+            const container = document.getElementById('fieldPositions');
+            
+            container.innerHTML = positions.map(row => `
+                <div class="position-row">
+                    ${row.positions.map((pos, idx) => {
+                        const slotKey = `${formation}-${pos}-${idx}`;
+                        const assignedPlayers = depthChart[slotKey] || [];
+                        
+                        return `
+                            <div class="player-slot" 
+                                 data-slot="${slotKey}" 
+                                 data-position="${pos}"
+                                 ondrop="dropPlayer(event, '${slotKey}')"
+                                 ondragover="allowDrop(event)"
+                                 ondragleave="dragLeave(event)">
+                                <div class="slot-position">#${pos}</div>
+                                <div class="player-list">
+                                    ${assignedPlayers.map(playerName => {
+                                        const player = players.find(p => p.name === playerName);
+                                        if (!player) return '';
+                                        return `
+                                            <div class="player-item" 
+                                                 draggable="true"
+                                                 ondragstart="dragStart(event, '${playerName}', '${slotKey}')"
+                                                 ondragend="dragEnd(event)">
+                                                <div class="player-item-name">${player.name}</div>
+                                                <div class="player-item-rating">${player.overallScore}</div>
+                                                <button class="remove-player" onclick="removePlayerFromSlot('${slotKey}', '${playerName}', event)">×</button>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                <button class="slot-add-btn" onclick="openModal('${slotKey}', '${pos}')">+ Add Player</button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `).join('');
+        }
+
+        function dragStart(event, playerName, fromSlot) {
+            draggedPlayer = playerName;
+            draggedFromSlot = fromSlot;
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragEnd(event) {
+            event.target.classList.remove('dragging');
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drag-over');
+        }
+
+        function dragLeave(event) {
+            event.currentTarget.classList.remove('drag-over');
+        }
+
+        function dropPlayer(event, toSlot) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drag-over');
+            
+            if (!draggedPlayer || !draggedFromSlot) return;
+            
+            // Remove from old slot
+            if (depthChart[draggedFromSlot]) {
+                depthChart[draggedFromSlot] = depthChart[draggedFromSlot].filter(name => name !== draggedPlayer);
+            }
+            
+            // Add to new slot
+            if (!depthChart[toSlot]) {
+                depthChart[toSlot] = [];
+            }
+            if (!depthChart[toSlot].includes(draggedPlayer)) {
+                depthChart[toSlot].push(draggedPlayer);
+            }
+            
+            draggedPlayer = null;
+            draggedFromSlot = null;
+            
+            saveToLocalStorage();
+            renderDepthChart();
+        }
+
+        function removePlayerFromSlot(slotKey, playerName, event) {
+            event.stopPropagation();
+            if (depthChart[slotKey]) {
+                depthChart[slotKey] = depthChart[slotKey].filter(name => name !== playerName);
+                if (depthChart[slotKey].length === 0) {
+                    delete depthChart[slotKey];
+                }
+            }
+            saveToLocalStorage();
+            renderDepthChart();
+        }
+
+        function openModal(slotKey, position) {
+            currentSlot = slotKey;
+            const modal = document.getElementById('playerModal');
+            const modalHeader = document.getElementById('modalHeader');
+            const optionsContainer = document.getElementById('playerOptions');
+            
+            modalHeader.textContent = `Add Player to ${position}`;
+            
+            const currentPlayers = depthChart[slotKey] || [];
+            const availablePlayers = players.filter(p => !currentPlayers.includes(p.name));
+            
+            if (availablePlayers.length === 0) {
+                optionsContainer.innerHTML = '<p style="text-align: center; color: #64748b; padding: 20px;">All players assigned to this position</p>';
+            } else {
+                optionsContainer.innerHTML = availablePlayers
+                    .sort((a, b) => b.overallScore - a.overallScore)
+                    .map(player => `
+                        <div class="player-option" onclick="assignPlayer('${player.name}')">
+                            <div class="player-option-name">${player.name} (${player.position})</div>
+                            <div class="player-option-rating">${player.overallScore}</div>
+                        </div>
+                    `).join('');
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('playerModal').classList.remove('active');
+            currentSlot = null;
+        }
+
+        function assignPlayer(playerName) {
+            if (currentSlot) {
+                if (!depthChart[currentSlot]) {
+                    depthChart[currentSlot] = [];
+                }
+                if (!depthChart[currentSlot].includes(playerName)) {
+                    depthChart[currentSlot].push(playerName);
+                }
+                saveToLocalStorage();
+                renderDepthChart();
+                closeModal();
+            }
+        }
+
+        function clearSlot() {
+            if (currentSlot) {
+                delete depthChart[currentSlot];
+                saveToLocalStorage();
+                renderDepthChart();
+                closeModal();
+            }
+        }
+
+        // Initialize
+        updateYearFilter();
+        updateCounts();
+        renderPlayers();
+    </script>
+</body>
+</html>
