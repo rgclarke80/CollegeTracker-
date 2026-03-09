@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athlete Registration - College Soccer Recruiting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f172a;
+            --orange: #f97316;
+            --orange-light: #fb923c;
+            --orange-dark: #ea580c;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--navy);
+            color: white;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 2px;
+            color: var(--orange);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(36px, 6vw, 56px);
+            line-height: 1.1;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(249, 115, 22, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+            color: var(--orange);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: var(--orange);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-family: 'Manrope', sans-serif;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--orange);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #64748b;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: var(--navy);
+            color: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--orange);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: var(--orange-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .success-message h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo-text">COLLEGE RECRUITING</div>
+            <h1>Get Recruited</h1>
+            <p class="subtitle">
+                Submit your profile to be considered for our soccer program. 
+                Complete all fields below to get started.
+            </p>
+        </div>
+
+        <div class="form-container">
+            <div class="success-message" id="successMessage">
+                <h3>✓ Profile Submitted!</h3>
+                <p>Thank you for your interest! Your profile has been submitted to our coaching staff for review. We'll be in touch if we'd like to learn more about you.</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <form id="athleteForm">
+                <div class="form-section">
+                    <div class="section-title">Personal Information</div>
+                    
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <input type="text" id="name" required placeholder="First and Last Name">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" id="email" required placeholder="your.email@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Contact Number <span class="required">*</span></label>
+                            <input type="tel" id="number" required placeholder="+1 (555) 123-4567">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date of Birth <span class="required">*</span></label>
+                            <input type="date" id="dob" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>GPA <span class="required">*</span></label>
+                            <input type="number" id="gpa" step="0.01" min="0" max="4.0" required placeholder="3.5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-title">Soccer Information</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Position <span class="required">*</span></label>
+                            <select id="position" required>
+                                <option value="">Select Position</option>
+                                <option value="GK">Goalkeeper (GK)</option>
+                                <option value="CB">Center Back (CB)</option>
+                                <option value="LB">Left Back (LB)</option>
+                                <option value="RB">Right Back (RB)</option>
+                                <option value="CDM">Defensive Midfielder (CDM)</option>
+                                <option value="CM">Central Midfielder (CM)</option>
+                                <option value="CAM">Attacking Midfielder (CAM)</option>
+                                <option value="LM">Left Midfielder (LM)</option>
+                                <option value="RM">Right Midfielder (RM)</option>
+                                <option value="LW">Left Wing (LW)</option>
+                                <option value="RW">Right Wing (RW)</option>
+                                <option value="ST">Striker (ST)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Recruiting Year <span class="required">*</span></label>
+                            <select id="recruitingYear" required>
+                                <option value="">Select Year</option>
+                                <option value="2025">Class of 2025</option>
+                                <option value="2026">Class of 2026</option>
+                                <option value="2027">Class of 2027</option>
+                                <option value="2028">Class of 2028</option>
+                                <option value="2029">Class of 2029</option>
+                                <option value="2030">Class of 2030</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Club/High School <span class="required">*</span></label>
+                        <input type="text" id="club" required placeholder="e.g., Atlanta United Academy / Lincoln High School">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Highlight Video Link <span class="required">*</span></label>
+                        <input type="url" id="videoLink" required placeholder="https://hudl.com/... or https://youtube.com/...">
+                        <p class="info-text">Please provide a link to your highlight reel (Hudl, YouTube, Vimeo, etc.)</p>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('athleteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // Hide previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            // Get form data
+            const athleteData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                number: document.getElementById('number').value,
+                dob: document.getElementById('dob').value,
+                gpa: parseFloat(document.getElementById('gpa').value),
+                position: document.getElementById('position').value,
+                recruitingYear: document.getElementById('recruitingYear').value,
+                club: document.getElementById('club').value,
+                videoLink: document.getElementById('videoLink').value,
+                // Default ratings for self-submitted athletes
+                technical: 5,
+                tactical: 5,
+                physical: 5,
+                mental: 5,
+                overallScore: 5.0,
+                notes: 'Self-submitted profile - Pending coach evaluation',
+                starred: false,
+                selfSubmitted: true,
+                submittedDate: new Date().toISOString()
+            };
+
+            // Validation
+            if (athleteData.gpa < 0 || athleteData.gpa > 4.0) {
+                errorMessage.textContent = 'GPA must be between 0.0 and 4.0';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            if (!athleteData.videoLink.startsWith('http')) {
+                errorMessage.textContent = 'Please enter a valid video link starting with http:// or https://';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                // Get existing recruits from localStorage
+                let recruits = JSON.parse(localStorage.getItem('recruits')) || [];
+
+                // Check if email already exists
+                const existingRecruit = recruits.find(r => r.email === athleteData.email);
+                if (existingRecruit) {
+                    errorMessage.textContent = 'A profile with this email has already been submitted.';
+                    errorMessage.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Profile';
+                    return;
+                }
+
+                // Add new athlete to recruits
+                recruits.push(athleteData);
+
+                // Save back to localStorage
+                localStorage.setItem('recruits', JSON.stringify(recruits));
+
+                // Show success message
+                successMessage.style.display = 'block';
+                
+                // Hide form
+                document.getElementById('athleteForm').style.display = 'none';
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (error) {
+                errorMessage.textContent = 'An error occurred. Please try again.';
+                errorMessage.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Profile';
+                console.error('Submission error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
